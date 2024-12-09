@@ -14,7 +14,7 @@ class SDNMatch:
     to_matches: List[str]
     cc_matches: List[str]
 
-def get_matches(matchfile):
+def get_domains_to_match(matchfile):
     # get all valid email addresses in the match list, and ignore everything
     # else
     with open(matchfile) as match_list:
@@ -22,28 +22,23 @@ def get_matches(matchfile):
 
         # search for all occurrences, but use finditer() so that the matches
         # remain intact
-        return [x.group() for x in re.finditer(email_pattern, filedata)]
+        emails = [x.group() for x in re.finditer(email_pattern, filedata)]
+
+        if not emails:
+            print(f"No valid email addresses or domains to match against in {args.match_list}")
+
+        # now get the respective domains to check against the actual patch(es)
+        domains = [address.split("@", 1)[1] for address in emails]
+
+        return emails, domains
 
 def run():
     cli_parser = SDNCheckParser.get_cli_parser()
     args = cli_parser.parse_args()
     series = PatchSeries(args.patch_path)
-    matches = None
-    domains = None
+    matches, domains = get_domains_to_match(args.match_list)
     results = []
     
-    #matches = get_matches(args.match_list)
-    # get all valid email addresses in the match list, and ignore everything
-    # else
-    with open(args.match_list) as match_list:
-        filedata = match_list.read()
-
-        # search for all occurrences, but use finditer() so that the matches
-        # remain intact
-        matches = [x.group() for x in re.finditer(email_pattern, filedata)]
-
-    if not matches:
-        print(f"No valid email addresses or domains to match against in {args.match_list}")
     if args.debug:
         print(f"[DEBUG] Found the following email addresses in the match list: ")
         print()
@@ -51,8 +46,6 @@ def run():
             print(f"- {match}")
         print()
 
-    # now get the respective domains to check against the actual patch(es)
-    domains = [address.split("@", 1)[1] for address in matches]
     if args.debug:
         print(f"[DEBUG] Checking against the following domains: ")
         print()
