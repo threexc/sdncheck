@@ -32,27 +32,8 @@ def get_domains_to_match(matchfile):
 
         return emails, domains
 
-def run():
-    cli_parser = SDNCheckParser.get_cli_parser()
-    args = cli_parser.parse_args()
-    series = PatchSeries(args.patch_path)
-    matches, domains = get_domains_to_match(args.match_list)
+def check_domains_against_series(domains, series):
     results = []
-    
-    if args.debug:
-        print(f"[DEBUG] Found the following email addresses in the match list: ")
-        print()
-        for match in matches:
-            print(f"- {match}")
-        print()
-
-    if args.debug:
-        print(f"[DEBUG] Checking against the following domains: ")
-        print()
-        for domain in domains:
-            print(f"- {domain}")
-        print()
-
     # check each patch in the target series for bad addresses
     for patch in series.patchdata:
         author = patch.author
@@ -77,6 +58,28 @@ def run():
         if author_result or to_result or cc_result:
             results.append(SDNMatch(patch.subject, author_result, to_result,
                                     cc_result))
+    return results
+
+def run():
+    cli_parser = SDNCheckParser.get_cli_parser()
+    args = cli_parser.parse_args()
+    series = PatchSeries(args.patch_path)
+    matches, domains = get_domains_to_match(args.match_list)
+
+    if args.debug:
+        print(f"[DEBUG] Found the following email addresses in the match list: ")
+        print()
+        for match in matches:
+            print(f"- {match}")
+        print()
+
+        print(f"[DEBUG] Checking against the following domains: ")
+        print()
+        for domain in domains:
+            print(f"- {domain}")
+        print()
+
+    results = check_domains_against_series(domains, series)
 
     print(results)
     for result in results:
