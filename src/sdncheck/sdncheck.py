@@ -57,7 +57,8 @@ def run():
         print(f"[DEBUG] Checking against the following domains: ")
         print()
         for domain in domains:
-            print(domain)
+            print(f"- {domain}")
+        print()
 
     # check each patch in the target series for bad addresses
     for patch in series.patchdata:
@@ -80,9 +81,7 @@ def run():
                 if domain in recipient:
                     cc_result.append(recipient)
 
-        if not author_result and not to_result and not cc_result:
-            print(f"No bad addresses found in '{patch.subject}'.")
-        else:
+        if author_result or to_result or cc_result:
             results.append(SDNMatch(patch.subject, author_result, to_result,
                                     cc_result))
 
