@@ -27,7 +27,7 @@ classifiers = [
 dependencies = []
 
 [project.scripts]
-sdncheck = "sdncheck.tests.sdncheck:run"
+sdncheck = "sdncheck.sdncheck:run"
 
 [project.urls]
 Documentation = "https://github.com/threexc/sdncheck#readme"
