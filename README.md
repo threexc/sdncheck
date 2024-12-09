@@ -3,6 +3,10 @@
 [![PyPI - Version](https://img.shields.io/pypi/v/sdncheck.svg)](https://pypi.org/project/sdncheck)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/sdncheck.svg)](https://pypi.org/project/sdncheck)
 
+`sdncheck` is a tool for checking mboxes and similar text-based files for the
+presence of known bad email addresses and domains, in case you might not want to
+communicate with those places.
+
 -----
 
 ## Table of Contents
