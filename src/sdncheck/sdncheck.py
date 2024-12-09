@@ -14,6 +14,13 @@ class SDNMatch:
     to_matches: List[str]
     cc_matches: List[str]
 
+    def __str__(self):
+        return (f"Patch {self.subject} contained:\n"
+                f"- authors: {self.author_match}\n"
+                f"- to: {self.to_matches}\n"
+                f"- cc: {self.cc_matches}\n"
+        )
+
 def get_domains_to_match(matchfile):
     # get all valid email addresses in the match list, and ignore everything
     # else
@@ -67,12 +74,6 @@ def run():
     matches, domains = get_domains_to_match(args.match_list)
 
     if args.debug:
-        print(f"[DEBUG] Found the following email addresses in the match list: ")
-        print()
-        for match in matches:
-            print(f"- {match}")
-        print()
-
         print(f"[DEBUG] Checking against the following domains: ")
         print()
         for domain in domains:
@@ -81,6 +82,5 @@ def run():
 
     results = check_domains_against_series(domains, series)
 
-    print(results)
     for result in results:
-        pass
+        print(result)
