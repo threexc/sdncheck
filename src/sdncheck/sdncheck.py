@@ -15,7 +15,7 @@ class SDNMatch:
     cc_matches: List[str]
 
     def __str__(self):
-        return (f"Patch {self.subject} contained:\n"
+        return (f"Patch '{self.subject}' contained:\n"
                 f"- authors: {self.author_match}\n"
                 f"- to: {self.to_matches}\n"
                 f"- cc: {self.cc_matches}\n"
